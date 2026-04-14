@@ -7,7 +7,7 @@ services:
       AWS_DEFAULT_REGION: "us-west-x"  # << Change me
       AWS_ACCESS_KEY_ID: "ENTER_YOUR_ACCESS_KEY"  # << Change me
       AWS_SECRET_ACCESS_KEY: "ENTER_YOUR_SECRET_KEY"  # << Change me
-      CRON_SCHEDULE: "*/5 * * * *" # Dynamic cron schedule for backup time
+      CRON_SCHEDULE: "0 */2 * * *" # Dynamic cron schedule for backup time
       DELETE_OLDER_THAN_DAY: "2" # Delete all files in S3 older than day xx
       BACKUP_DIR: "/backup/mariadb" # Path to the backup directory inside the container
     volumes:
