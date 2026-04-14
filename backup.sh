@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set variables
-DATE=$(date +%Y-%m-%d-%H:%M)
+DATE=$(date +%H%M%S)
 BACKUP_DIR="${BACKUP_DIR}"
 DELETE_OLDER_THAN_DAY=${DELETE_OLDER_THAN_DAY}
 CURRENT_TIMESTAMP=$(date +%s)
