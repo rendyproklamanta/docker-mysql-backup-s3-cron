@@ -1,0 +1,27 @@
+services:
+  mysql-backup-s3:
+    image: alpine:latest
+    environment:
+      S3_BUCKET: "s3://ENTER_YOUR_BUCKET_NAME/backup/mysql"  # << Change me
+      ENDPOINT_URL: "https://s3.us-west-x.backblazeb2.com" # << Change me
+      AWS_DEFAULT_REGION: "us-west-x"  # << Change me
+      AWS_ACCESS_KEY_ID: "ENTER_YOUR_ACCESS_KEY"  # << Change me
+      AWS_SECRET_ACCESS_KEY: "ENTER_YOUR_SECRET_KEY"  # << Change me
+      CRON_SCHEDULE: "*/5 * * * *" # Dynamic cron schedule for backup time
+      DELETE_OLDER_THAN_DAY: "2" # Delete all files in S3 older than day xx
+      BACKUP_DIR: "/backup/mariadb" # Path to the backup directory inside the container
+    volumes:
+      - /backup/mariadb:${BACKUP_DIR} # Mount local backup directory to container
+      - ./backup.sh:/usr/local/bin/backup.sh # Mount backup script
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - |
+        apk add --no-cache bash aws-cli dcron curl
+        chmod +x /usr/local/bin/backup.sh
+        CRON_SCHEDULE=$${CRON_SCHEDULE}
+        CRON_JOB="$${CRON_SCHEDULE} /usr/local/bin/backup.sh >> /var/log/db_backup.log 2>&1"
+        (crontab -l 2>/dev/null; echo "$${CRON_JOB}") | crontab -
+        touch /var/log/db_backup.log
+        echo "Cron job configured: $${CRON_SCHEDULE}"
+        crond -f -l 2
