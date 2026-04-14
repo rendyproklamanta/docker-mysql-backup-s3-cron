@@ -25,3 +25,12 @@ services:
         touch /var/log/db_backup.log
         echo "Cron job configured: $${CRON_SCHEDULE}"
         crond -f -l 2
+    networks:
+      - db-backup-network
+
+networks:
+  db-backup-network:
+    driver: overlay
+    external: false
+
+# docker network create -d overlay db-backup-network
