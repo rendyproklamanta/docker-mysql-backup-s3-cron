@@ -11,7 +11,7 @@ services:
       DELETE_OLDER_THAN_DAY: "2" # Delete all files in S3 older than day xx
       BACKUP_DIR: "/backup/mariadb" # Path to the backup directory inside the container
     volumes:
-      - /backup/mariadb:${BACKUP_DIR} # Mount local backup directory to container
+      - /backup/mariadb:/backup/mariadb # Mount local backup directory to container
       - ./backup.sh:/usr/local/bin/backup.sh # Mount backup script
     entrypoint: /bin/sh
     command:
